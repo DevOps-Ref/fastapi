@@ -216,7 +216,7 @@ class user(BaseModel):
     phone: int
 ```
 
-### main.py
+### main.py (POST API)
 ```
 from fastapi import FastAPI, Depends
 from BLOG import req_body
@@ -227,6 +227,7 @@ from BLOG.models import User
 
 app = FastAPI()
 
+# create session for every request
 def get_db() -> Generator[Session,None,None] :
     db = SessionLocal()
     try:
@@ -248,5 +249,24 @@ def create_user(request_body: req_body.user, db: Session = Depends(get_db) ):
 ```
 
 * uvicorn BLOG.main:app --reload
+
+# DB commands
+* db is Database session which is instance of class returned by sessionmaker
+```
+# Add new data(for single instance)
+db.add(model_instance)
+db.commit
+
+# query from Existing data
+db.query(model_namae)
+                                                ==> .all()
+                                                ==> .first
+                                    ==> .limit(1).all()
+    ==> .filter(model.attr == value)
+                                    ==> .delete(synchronize_session=False)
+
+## AND operation
+session.query(MyClass).filter(MyClass.name == 'some name', MyClass.id > 5)
+```
 
 
